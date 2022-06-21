@@ -1,0 +1,129 @@
+version: "3.9"
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: broker
+    ports:
+      - "9092:9092"
+    expose:
+      - '29092'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+
+  person_db:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "tcs"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - ./person-api/sql:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  medical_api_db:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "tcs"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - ./medical-api/sql:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
+
+  qr_service_db:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "tcs"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - ./qr-service/sql:/docker-entrypoint-initdb.d
+    ports:
+      - "5434:5432"
+
+  service-registry:
+    build: service-registry
+    command: java -jar service-registry.jar
+    ports:
+      - "8761:8761"
+
+  person:
+    build: person-api
+    command: java -jar SpringDataApp.jar
+    ports:
+      - "8080:8080"
+    depends_on:
+      - person_db
+      - service-registry
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://person_db:5432/tcs
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+
+  medical_api:
+    build: medical-api
+    command: java -jar medical.jar
+    ports:
+      - "8081:8081"
+    depends_on:
+      - medical_api_db
+      - service-registry
+      - broker
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://medical_api_db:5432/tcs
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - KAFKA_BOOTSTRAP-SERVER=broker:29092
+
+  qr_service:
+    build: qr-service
+    command: java -jar qr-service.jar
+    ports:
+      - "8082:8082"
+    depends_on:
+      - qr_service_db
+      - service-registry
+      - broker
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://qr_service_db:5432/tcs
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - KAFKA_BOOTSTRAP-SERVER=broker:29092
+
+  api-gateway:
+    build: api-gateway
+    command: java -jar api-gateway.jar
+    ports:
+      - "8083:8083"
+    depends_on:
+      - service-registry
+      - person
+      - qr_service
+      - medical_api
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
