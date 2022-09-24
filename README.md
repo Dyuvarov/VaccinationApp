@@ -1,4 +1,4 @@
-## Инстументы:
+## Technologies:
 :small_blue_diamond: Java 11  
 :small_blue_diamond: Spring Boot  
 :small_blue_diamond: Spring Cloud (OpenFeign, Eureka)  
@@ -8,21 +8,20 @@
 :small_blue_diamond: PostgreSQL  
 :small_blue_diamond: Maven  
 
-## Описание  
-Приложение для хранения информации о вакцинации населения, QR-кодов вакцинированных, персональных данных вакцинированных.  
-Состоит из 6 микросервисов:  
-:heavy_check_mark: [Person API](person-api/README.md) - для работы с персональными данными вакцинированных    
-:heavy_check_mark: [Medical API](medical-api/README.md) - для работы с информацией о вакцинации  
-:heavy_check_mark: [QR service](qr-service/README.md) - для генерации и хранения QR-кодов  
-:heavy_check_mark: [API gateway](api-gateway/README.md) - для маршрутизации запросов, поступающих в систему  
-:heavy_check_mark: [Service registry](service-registry/README.md) - для мониторинга микросервисов  
+## Description  
+This demo web application gives REST API to collect information about persons, vaccinations, generate and store QR-codes.
+Consist of 6 microservices:  
+:heavy_check_mark: [Person API](person-api/README.md) - to work with personal information about vaccinated people.    
+:heavy_check_mark: [Medical API](medical-api/README.md) - to work with information about vaccinations  
+:heavy_check_mark: [QR service](qr-service/README.md) - to work with QR-codes  
+:heavy_check_mark: [API gateway](api-gateway/README.md) - application entry point, requests router  
+:heavy_check_mark: [Service registry](service-registry/README.md) - microservices monitoring  
   
 ![architecture](architecture.jpeg)  
   
-Все запросы из внешнего мира поступают в API gateway, откуда они перенаправляются в нужный сервис.  
-Сервисы взаимодействуют между собой с помощью feign-клиентов.
+Microservices interact with each other by feign clients.
 
 
-## Запуск
+## build & run
 1) docker-compose build
 2) docker-compose up
