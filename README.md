@@ -11,11 +11,11 @@
 ## Description  
 This demo web application gives REST API to collect information about persons, vaccinations, generate and store QR-codes.
 Consist of 6 microservices:  
-:heavy_check_mark: [Person API](person-api/README.md) - to work with personal information about vaccinated people.    
-:heavy_check_mark: [Medical API](medical-api/README.md) - to work with information about vaccinations  
-:heavy_check_mark: [QR service](qr-service/README.md) - to work with QR-codes  
-:heavy_check_mark: [API gateway](api-gateway/README.md) - application entry point, requests router  
-:heavy_check_mark: [Service registry](service-registry/README.md) - microservices monitoring  
+:heavy_check_mark: [Person API](person-api/) - to work with personal information about vaccinated people.    
+:heavy_check_mark: [Medical API](medical-api/) - to work with information about vaccinations  
+:heavy_check_mark: [QR service](qr-service/) - to work with QR-codes  
+:heavy_check_mark: [API gateway](api-gateway/) - application entry point, requests router  
+:heavy_check_mark: [Service registry](service-registry/) - microservices monitoring  
   
 ![architecture](architecture.jpeg)  
   
