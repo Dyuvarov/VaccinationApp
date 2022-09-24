@@ -1,1 +1,2 @@
-Сервис для работы с пресональными данными вакцинированных. Предоставляет REST API для взаимодействия.  
+Service provides CRUD on personal information about vaccinated people.  
+Additionaly provides API to verify that person with given name has a given passport number.
