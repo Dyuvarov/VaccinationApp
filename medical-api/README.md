@@ -1,2 +1,2 @@
-Сервис для хранения информации о вакцинациях. Импортирует список вакцинаций в виде csv файла в базу данных.  
-Полученные данные о вакцинациях отпарвляются в kafka для последующей генерации QR-кодов.
+Collecting information about vaccinations. Provides API to import vaccinations from .csv file to database.  
+Send the imported vaccinations to Apache Kafka for the QR codes generation.
