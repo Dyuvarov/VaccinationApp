@@ -1,3 +1,3 @@
-Сервис генерации QR-кодов.
-Вместо настоящего QR-кода генерируется хэш по алгоритму MD5, который сохраняется в базе данных. 
-Данные для генерации кода считываются из Kafka.
+The "QR codes" generator.  
+Gets vaccination information from Apache Kafka and generates "QR code" for each.  
+*Instead of real QR code generates MD5 hash. 
