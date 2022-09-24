@@ -1,1 +1,1 @@
-Сервис, обеспечивающий мониторинг сервисов и обеспечивающий возможность их взаиомдействия.
+Provide Provides microservices condition montoring. Provides microservice to microservice interactions.
