@@ -9,7 +9,7 @@
 :small_blue_diamond: Maven  
 
 ## Description  
-This demo web application gives REST API to collect information about persons, vaccinations, generate and store QR-codes.
+This demo web application provides REST API to collect information about persons, vaccinations, generate and store QR-codes.
 Consist of 6 microservices:  
 :heavy_check_mark: [Person API](person-api/) - to work with personal information about vaccinated people.    
 :heavy_check_mark: [Medical API](medical-api/) - to work with information about vaccinations  
